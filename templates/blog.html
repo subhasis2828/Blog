@@ -1,0 +1,101 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="row">
+            <div class="col-sm-12 stretch-card mb-3 mb-lg-0" data-aos="zoom-in">
+              <div class="card color-cards">
+                <div class="card-body p-0">
+                    <div class="card-image">
+                      <img src="{{blog.image.url}}" class="" style="height: 400px;width: 100%;" alt="">
+                    </div> 
+                  <div class="card-details pt-4">
+                    <div>
+                      <p>&#128338; {{blog.updated_at}}</p>
+                    <p>&#9823; {{blog.author.username}}</p>
+
+                      <h3 class="text-dark pb-2 px-3">{{blog.title}}</h3>
+                      <h6 class="text-dark pb-2 px-3">{{blog.decs}}</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <section class="case-studies mt-2 px-4" id="case-studies-section">
+            <div class="col-12 text-center pb-5">
+              <h2>Recomended </h2>
+            </div>
+          {% for i in blogs %}
+          <div class="row grid-margin">
+              <div class="col-sm-12 stretch-card mb-3 mb-lg-0" data-aos="zoom-in">
+                <div class="card color-cards">
+                  <div class="card-body p-0">
+    
+                      <div class="card-image">
+                        <img src="{{i.image.url}}" class="" style="height: 180px;width: 100%;" alt="">
+                      </div> 
+                    <div class="card-details pt-4">
+                      <div>
+                        <h6 class="text-dark pb-2 px-3">{{i.title}}</h6>
+                        <a href="{% url 'blog' id=i.id %}" class="btn btn-primary">Read More</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          {% endfor %}
+    
+          </section> 
+        </div>
+      </div>  
+      
+
+       
+      
+      <footer class="border-top">
+        <p class="text-center text-muted pt-4">Copyright © 2019<a href="https://www.bootstrapdash.com/" class="px-1">Bootstrapdash.</a>All rights reserved.</p>
+      </footer>
+      <!-- Modal for Contact - us Button -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="Name">Name</label>
+                  <input type="text" class="form-control" id="Name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                  <label for="Email">Email</label>
+                  <input type="email" class="form-control" id="Email-1" placeholder="Email">
+                </div>
+                <div class="form-group">
+                  <label for="Message">Message</label>
+                  <textarea class="form-control" id="Message" placeholder="Enter your Message"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+
+  {% endblock content %}

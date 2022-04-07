@@ -1,0 +1,75 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <div class="container">         
+      <section class="case-studies" id="case-studies-section">
+        <div class="col-12 text-center pb-5">
+          <h2>Our Blogs</h2>
+        </div>
+        <div class="row grid-margin">
+      {% for i in blogs %}
+          <div class="col-sm-6 stretch-card mb-3 mb-lg-0" data-aos="zoom-in">
+            <div class="card color-cards">
+              <div class="card-body p-0">
+
+                  <div class="card-image">
+                    <img src="{{i.image.url}}" class="" style="height: 237px;width: 100%;" alt="">
+                  </div> 
+                <div class="card-details pt-4">
+                  <div>
+                    <p>&#128338; {{i.updated_at}}</p>
+                    <p>&#9823; {{i.author.username}}</p>
+                    <h3 class="text-dark pb-2 px-3">{{i.title}}</h3>
+                    <h6 class="text-dark pb-2 px-3">{{i.decs|truncatechars:200}}</h6>
+                    <a href="{% url 'blog' id=i.id %}" class="btn btn-primary">Read More</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% if forloop.counter|divisibleby:2 %}
+        </div>
+        <div class="row grid-margin">
+        {% endif %}
+      {% endfor %}
+    </div>
+
+      </section>     
+ 
+      <!-- Modal for Contact - us Button -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="Name">Name</label>
+                  <input type="text" class="form-control" id="Name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                  <label for="Email">Email</label>
+                  <input type="email" class="form-control" id="Email-1" placeholder="Email">
+                </div>
+                <div class="form-group">
+                  <label for="Message">Message</label>
+                  <textarea class="form-control" id="Message" placeholder="Enter your Message"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+
+  {% endblock content %}

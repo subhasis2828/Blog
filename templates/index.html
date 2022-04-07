@@ -1,0 +1,104 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+  <div class="banner" >
+    <div class="container">
+      <h1 class="font-weight-semibold">Welcome to Code Hub</h1>
+      <h6 class="font-weight-normal text-muted pb-3">Our Motive to solves all your problems and queries.</h6>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="container">
+      <section class="features-overview" id="features-section" >
+        <div class="content-header">
+          <h2>Our Recent Blogs</h2>
+        </div>
+        <div class="d-md-flex justify-content-between">
+          {% for  r in recent_blogs %}
+          <div class="grid-margin d-flex justify-content-start">
+            <div class="features-width">
+              <img src="{{r.image.url}}" alt="" class="w-90" height="200px">
+              <h5 class="py-3">{{r.title}}</h5>
+              <p class="text-muted">{{r.decs|truncatechars:150}}</p>
+              <a href="{% url 'blog' id=r.id %}"><p class="readmore-link">Readmore</p></a>  
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>  
+
+      <section class="digital-marketing-service" id="digital-marketing-section">
+        {% for  r in best_blogs %}
+         
+        {% if forloop.counter == 1 %}
+        <div class="row align-items-center">
+          <div class="col-12 col-lg-7 grid-margin grid-margin-lg-0" data-aos="fade-right">
+            <h3 class="m-0">{{r.title}}</h3>
+            <div class="col-lg-7 col-xl-6 p-0">
+              <p class="py-4 m-0 text-muted">{{r.decs|truncatechars:450}}</p>
+            </div>  
+            <a href="{% url 'blog' id=r.id %}" class="btn btn-info">Readmore</a>
+  
+          </div>
+          <div class="col-12 col-lg-5 p-0 img-digital grid-margin grid-margin-lg-0" data-aos="fade-left">
+            <img src="{{r.image.url}}" alt="" class="img-fluid">
+          </div>
+        </div>
+        {% else %}
+
+        <div class="row align-items-center">
+          <div class="col-12 col-lg-7 text-center flex-item grid-margin" data-aos="fade-right">
+            <img src="{{r.image.url}}" alt="" class="img-fluid">
+          </div>
+          <div class="col-12 col-lg-5 flex-item grid-margin" data-aos="fade-left">
+            <h3 class="m-0">{{r.title}}</h3>
+            <div class="col-lg-9 col-xl-8 p-0">
+              <p class="py-4 m-0 text-muted">{{r.decs|truncatechars:450}}</p>
+            </div>
+            <a href="{% url 'blog' id=r.id %}" class="btn btn-info">Readmore</a>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor%}
+
+      </section>         
+  
+      <!-- Modal for Contact - us Button -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="Name">Name</label>
+                  <input type="text" class="form-control" id="Name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                  <label for="Email">Email</label>
+                  <input type="email" class="form-control" id="Email-1" placeholder="Email">
+                </div>
+                <div class="form-group">
+                  <label for="Message">Message</label>
+                  <textarea class="form-control" id="Message" placeholder="Enter your Message"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+
+  {% endblock content %}

@@ -1,0 +1,72 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+          <div class="p-4 bg-info" style="border-radius: 10px; box-shadow: 1px 2px 8px 2px #5e5757;">
+            <form action="{% url 'addblog'%}" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <center><h4>Add New Blog</h4></center>
+              <div class="form-group">
+                <label for="">Title</label>
+                <input type="text" name="title" class="form-control" placeholder="Enter Title">
+              </div>
+
+              <div class="form-group">
+                <label for="">Description</label>
+                <textarea name="desc" rows="5" class="form-control"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="">Image</label>
+                <input type="file" name="image" class="form-control" >
+              </div>
+
+              <center><button class="btn btn-outline-danger btn-block w-50 mx-auto">ADD BLOG</button></center>
+            </form>
+          </div>
+        </div>
+        <div class="col-sm-2"></div>
+      </div>  
+
+      <!-- Modal for Contact - us Button -->
+
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="Name">Name</label>
+                  <input type="text" class="form-control" id="Name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                  <label for="Email">Email</label>
+                  <input type="email" class="form-control" id="Email-1" placeholder="Email">
+                </div>
+                <div class="form-group">
+                  <label for="Message">Message</label>
+                  <textarea class="form-control" id="Message" placeholder="Enter your Message"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  </div>
+
+  {% endblock content %}

@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Code Hub</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="{% static 'vendors/owl-carousel/css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/owl-carousel/css/owl.theme.default.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/aos/css/aos.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.min.css' %}">
+  {% block custom_css%}
+  {% endblock custom_css%}
+</head>
+<body id="body" data-spy="scroll" data-target=".navbar" data-offset="100">
+  <header id="header-section">
+    <nav class="navbar navbar-expand-lg pl-3" id="navbar" style="padding:20px 20px !important;">
+    <div class="container">
+      <div class="navbar-brand-wrapper d-flex w-100">
+      <h3 class="text-danger">Code Hub</h3>        
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="mdi mdi-menu navbar-toggler-icon"></span>
+        </button> 
+      </div>
+      <div class="collapse navbar-collapse navbar-menu-wrapper" id="navbarSupportedContent">
+        <ul class="navbar-nav align-items-lg-center align-items-start ml-auto">
+          <li class="d-flex align-items-center justify-content-between pl-4 pl-lg-0">
+            <div class="navbar-collapse-logo">
+              <img src="images/Group2.svg" alt="">
+            </div>
+            <button class="navbar-toggler close-button" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="mdi mdi-close navbar-toggler-icon pl-5"></span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home'%}">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'blogs'%}">Blogs</a>  
+          </li>
+
+          {% if request.user.is_authenticated %}
+          <li class="nav-item btn-group pl-4 pl-lg-0">
+            <!-- Example single danger button -->
+            <a class="nav-link dropdown-toggle" style="cursor: pointer;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="text-capitalize">{{request.user.username|truncatechars:5}}</span>
+            </a>  
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'addblog'%}">Add Blog</a>
+              <a class="dropdown-item" href="{% url 'yourblog'%}">Your Blogs</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" style="cursor:pointer;"  data-toggle="modal" data-target="#logoutmodal">Logout</a>
+            </div>
+          </li>
+          {% else %}
+          <li class="nav-item btn-contact-us pl-4 pl-lg-0">
+            <a href="{% url 'login' %}" class="btn btn-info">Login</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div> 
+    </nav>   
+  </header>
+
+  <div class="modal fade" id="logoutmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLabel">Confirm</h4>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure ! you want to logout</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-dismiss="modal">No</button>
+          <a href="{% url 'logout'%}" type="button" class="btn btn-success">Yes </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if messages %}
+      {% for message in messages %}
+      {% if message.tags == "error" %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error! </strong> {{message}}.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %}
+
+      {% if message.tags == "success" %}
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Success! </strong> {{message}}.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %}
+      {% endfor %}
+  {% endif %}
+
+    {% block content %}
+    
+    {% endblock content %}
+    <div class="content-wrapper">
+      <div class="container">
+    <section class="contact-details" id="about">
+      <div class="row text-center text-md-left">
+        <div class="col-12 col-md-6 col-lg-3 grid-margin">
+          <h3 class="text-danger">Code Hub</h3>        
+          <div class="pt-2">
+            <p class="text-muted m-0">mikayla_beer@feil.name</p>
+            <p class="text-muted m-0">906-179-8309</p>
+          </div>         
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 grid-margin">
+          <h5 class="pb-2">Get in Touch</h5>
+          <p class="text-muted">Don’t miss any updates of our new templates and extensions.!</p>
+          <form>
+            <input type="text" class="form-control" id="Email" placeholder="Email id">
+          </form>
+          <div class="pt-3">
+            <button class="btn btn-dark">Subscribe</button>
+          </div>   
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 grid-margin">
+          <h5 class="pb-2">Our Guidelines</h5>
+          <a href="#"><p class="m-0 pb-2">Terms</p></a>   
+          <a href="#" ><p class="m-0 pt-1 pb-2">Privacy policy</p></a> 
+          <a href="#"><p class="m-0 pt-1 pb-2">Cookie Policy</p></a> 
+          <a href="#"><p class="m-0 pt-1">Discover</p></a> 
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 grid-margin">
+            <h5 class="pb-2">Our address</h5>
+            <p class="text-muted">518 Schmeler Neck<br>Bartlett. Illinois</p>
+            <div class="d-flex justify-content-center justify-content-md-start">
+              <a href="#"><span class="mdi mdi-facebook"></span></a>
+              <a href="#"><span class="mdi mdi-twitter"></span></a>
+              <a href="#"><span class="mdi mdi-instagram"></span></a>
+              <a href="#"><span class="mdi mdi-linkedin"></span></a>
+            </div>
+        </div>
+      </div>  
+    </section>
+  </div>
+</div>
+    <footer class="border-top">
+      <p class="text-center text-muted pt-4">copyright © 2022<a href="https://github.com/subhasis2828/" class="px-1">codehub.</a>All rights reserved.</p>
+    </footer>
+
+  <script src="{% static 'vendors/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendors/bootstrap/bootstrap.min.js' %}"></script>
+  <script src="{% static 'vendors/owl-carousel/js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'vendors/aos/js/aos.js' %}"></script>
+  <script src="{% static 'js/landingpage.js' %}"></script>
+  <script src="{% static 'form.js' %}"></script>
+
+</body>
+</html>

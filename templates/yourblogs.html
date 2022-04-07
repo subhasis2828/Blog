@@ -1,0 +1,100 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="content-wrapper">
+    <div class="container">         
+      <section class="case-studies" id="case-studies-section">
+        <div class="col-12 text-center pb-5">
+          <h2>Your Blogs</h2>
+        </div>
+        <div class="row grid-margin">
+      {% for i in blogs %}
+          <div class="col-sm-6 stretch-card mb-3 mb-lg-0" data-aos="zoom-in">
+            <div class="card color-cards">
+              <div class="card-body p-0">
+
+                  <div class="card-image">
+                    <img src="{{i.image.url}}" class="" style="height: 237px;width: 100%;" alt="">
+                  </div> 
+                <div class="card-details pt-4">
+                  <div>
+                      <p>&#128338; {{i.updated_at}}                         
+                        <button class="btn btn-danger float-right" data-toggle="modal" data-target="#deletemodal{{i.id}}">Delete</button>
+                        <button class="btn btn-info float-right mr-2" data-toggle="modal" data-target="#editmodal{{i.id}}">Edit</button>
+                      </p>
+                    <h3 class="text-dark pb-2 px-3">{{i.title}}</h3>
+                    <a href="{% url 'blog' id=i.id %}" class="btn btn-primary">Read More</a>
+                  </div>
+        
+                </div>
+              </div>
+            </div>
+          </div>
+        {% if forloop.counter|divisibleby:2 %}
+        </div>
+        <div class="row grid-margin">
+        {% endif %}
+
+        <!-- Modal for edigt - us Button -->
+      <div class="modal fade" id="editmodal{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Edit</h4>
+              <button type="button" class="close outline-none" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body pb-4">
+              <form action="{% url 'yourblog'%}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="blog_id" value="{{i.id}}">
+                <div class="form-group">
+                  <label for="">Title</label>
+                  <input type="text" name="title" class="form-control" value="{{i.title}}">
+                </div>
+  
+                <div class="form-group">
+                  <label for="">Description</label>
+                  <textarea name="desc" rows="6" class="form-control">{{i.decs}}</textarea>
+                </div>
+  
+                <div class="form-group">
+                  <label for="">Image</label>
+                  <small>{{i.image}}</small>
+                  <input type="file" name="image" class="form-control" >
+                </div>
+  
+                <center><button class="btn btn-outline-danger btn-block w-50 mx-auto">Update BLOG</button></center>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal for delete - us Button -->
+      <div class="modal fade" id="deletemodal{{i.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+              <p>Are You sure ! You want to delete this blog</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-dismiss="modal">No</button>
+              <a  href="{% url 'deleteblog' id=i.id%}" type="button" class="btn btn-success">Yes</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+      </section>     
+    </div> 
+  </div>
+
+  {% endblock content %}
