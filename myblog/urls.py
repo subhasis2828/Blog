@@ -26,7 +26,10 @@ urlpatterns = [
     path('blog/<str:id>',views.Blog,name='blog'),
     path('add/blog/',views.AddBlog,name='addblog'),
     path('your/blog/',views.YourBlog,name='yourblog'),
-    path('blog/delete//<str:id>',views.DeleteBlog,name='deleteblog'),
+    path('blog/delete/<str:id>',views.DeleteBlog,name='deleteblog'),
+    path('add/like',views.AddLike,name='addlike'),
+    path('add/dislike',views.AddDisLike,name='adddislike'),
+    path('add/comment',views.AddComment,name='addcomment'),
 
 
     

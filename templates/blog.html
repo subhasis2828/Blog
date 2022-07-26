@@ -1,95 +1,277 @@
-
 {% extends 'base.html' %}
 {% load static %}
+
+{% block custom_css %}
+<style>
+  .comment_profile{}
+</style>
+{% endblock custom_css %}
 {% block content %}
 
-  <div class="content-wrapper">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-8">
-          <div class="row">
-            <div class="col-sm-12 stretch-card mb-3 mb-lg-0" data-aos="zoom-in">
-              <div class="card color-cards">
-                <div class="card-body p-0">
-                    <div class="card-image">
-                      <img src="{{blog.image.url}}" class="" style="height: 400px;width: 100%;" alt="">
-                    </div> 
-                  <div class="card-details pt-4">
-                    <div>
-                      <p>&#128338; {{blog.updated_at}}</p>
-                    <p>&#9823; {{blog.author.username}}</p>
-
-                      <h3 class="text-dark pb-2 px-3">{{blog.title}}</h3>
-                      <h6 class="text-dark pb-2 px-3">{{blog.decs}}</h6>
-                    </div>
-                  </div>
+<div class="content-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="row">
+          <div class="col-sm-12 stretch-card mb-3 mb-lg-0" data-aos="zoom-in">
+            <div class="card color-cards">
+              <div class="card-body p-0">
+                <div class="card-image">
+                  <img src="{{blog.image.url}}" class="" style="height: 400px;width: 100%;" alt="">
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <section class="case-studies mt-2 px-4" id="case-studies-section">
-            <div class="col-12 text-center pb-5">
-              <h2>Recomended </h2>
-            </div>
-          {% for i in blogs %}
-          <div class="row grid-margin">
-              <div class="col-sm-12 stretch-card mb-3 mb-lg-0" data-aos="zoom-in">
-                <div class="card color-cards">
-                  <div class="card-body p-0">
-    
-                      <div class="card-image">
-                        <img src="{{i.image.url}}" class="" style="height: 180px;width: 100%;" alt="">
-                      </div> 
-                    <div class="card-details pt-4">
-                      <div>
-                        <h6 class="text-dark pb-2 px-3">{{i.title}}</h6>
-                        <a href="{% url 'blog' id=i.id %}" class="btn btn-primary">Read More</a>
+                <div class="card-details pt-4">
+                  <div class="mb-2">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <p>&#128338; {{blog.updated_at}}</p>
+                        <p>&#9823; {{blog.author.username}}</p>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="btn-group">
+                          <button type="button"
+                            class="btn {% if is_like %}btn-primary {% else %}btn-outline-primary {% endif %} ml-2 btn-sm"
+                            id="like_btn">{{blog.total_like}} Like</button>
+                          <button type="button"
+                            class="btn {% if is_dislike %} btn-primary {% else %} btn-outline-primary {% endif %} y ml-2 btn-sm"
+                            id="dislike_btn">{{blog.total_dislike}} Dislike</button>
+                          <button type="button" class="btn btn-outline-primary ml-2 btn-sm" id="comment_btn"
+                            data-toggle="modal" data-target="#CommentModal" data-backdrop="static"
+                            data-keyboard="false">Comment</button>
+                        </div>
                       </div>
                     </div>
+                    <h3 class="text-dark pb-2 px-3">{{blog.title}}</h3>
+                    <h6 class="text-dark pb-2 px-3">{{blog.decs}}</h6>
+                    <hr style="background-color:red">
                   </div>
+                  <div class="comment " id="user_comment">
+                    {% for c in user_comments %}
+                    <div id="user_single_comment" class="mt-1 p-1">
+                      <div style="display: flex; justify-content: space-between;">
+                        <div>
+                          <span class="comment_profile" style="text-transform: uppercase; padding:.3rem .5rem;background-color: rgb(233, 10, 10); color:#ffffff; border-radius: 50%; border:.20rem solid rgb(54, 12, 86)">{{c.user.username|first}} </span>
+                           <span class="text-priamry" style="font-size:1.25rem; font-weight: 800;">{{c.user.username}}</span>
+                        </div>
+                        <div>
+                          <span class="text-danger"><strong>Publish:</strong> {{c.created_at}}</span></br>
+                          <div class="btn-group mt-1">
+                            <button type="button" class="btn btn-outline-primary ml-2 btn-sm" id="" data-toggle="modal"
+                              data-target="#CommentModal" data-backdrop="static" data-keyboard="false">Edit</button>
+                            <button type="button" class="btn btn-outline-danger ml-2 btn-sm" id="" data-toggle="modal"
+                              data-target="#CommentModal" data-backdrop="static" data-keyboard="false">Delete</button>
+                          </div>
+
+                        </div>
+                      </div>
+                      <p class=" p-4">{{c.text}}</p>
+                    </div>
+                    {% endfor %}
+                  </div>
+
+                  <div class="allcomment mt-1" id="all-comment">
+                    {% for c in comments %}
+                    <div id="user_single_comment" class="mt-1 p-1">
+                      <div style="display: flex; justify-content: space-between;">
+                        <div>
+                          <span class="comment_profile" style="text-transform: uppercase;padding:.3rem .5rem;background-color: rgb(233, 10, 10); color:#ffffff; border-radius: 50%; border:.20rem solid rgb(54, 12, 86)">{{c.user.username|first}} </span>
+                          <span class="text-priamry" style="font-size:1.25rem; font-weight: 800;">{{c.user.username}}</span>
+                        </div>
+                        <div>
+                          <span class="text-danger"><strong>Publish:</strong> {{c.created_at}}</span></br>
+                      </div>
+                    </div>
+                      <p class=" p-4">{{c.text}}</p>
+                    </div>
+                    {% endfor %}
+                  </div>
+
                 </div>
               </div>
-            </div>
-
-          {% endfor %}
-    
-          </section> 
-        </div>
-      </div>  
-      
-      <!-- Modal for Contact - us Button -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="exampleModalLabel">Contact Us</h4>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="form-group">
-                  <label for="Name">Name</label>
-                  <input type="text" class="form-control" id="Name" placeholder="Name">
-                </div>
-                <div class="form-group">
-                  <label for="Email">Email</label>
-                  <input type="email" class="form-control" id="Email-1" placeholder="Email">
-                </div>
-                <div class="form-group">
-                  <label for="Message">Message</label>
-                  <textarea class="form-control" id="Message" placeholder="Enter your Message"></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-success">Submit</button>
             </div>
           </div>
         </div>
       </div>
-    </div> 
-  </div>
+      <div class="col-sm-4">
+        <section class="case-studies mt-2 px-4" id="case-studies-section">
+          <div class="col-12 text-center pb-5">
+            <h2>Recomended </h2>
+          </div>
+          {% for i in blogs %}
+          <div class="row grid-margin">
+            <div class="col-sm-12 stretch-card mb-3 mb-lg-0" data-aos="zoom-in">
+              <div class="card color-cards">
+                <div class="card-body p-0">
 
-  {% endblock content %}
+                  <div class="card-image">
+                    <img src="{{i.image.url}}" class="" style="height: 180px;width: 100%;" alt="">
+                  </div>
+                  <div class="card-details pt-4">
+                    <div>
+                      <h6 class="text-dark pb-2 px-3">{{i.title}}</h6>
+                      <a href="{% url 'blog' id=i.id %}" class="btn btn-primary">Read More</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+
+        </section>
+      </div>
+    </div>
+
+    <!-- Modal for Contact - us Button -->
+    <div class="modal fade" id="CommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="exampleModalLabel">Add Comment</h4>
+            <button type="button" class="close outline-none" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-4">
+              <div class="form-group">
+                <label for="Message">Comments</label>
+                <textarea class="form-control" rows="10" placeholder="Enter your Comments" id="comment_text"></textarea>
+              </div>
+              <center><button class="btn btn-outline-danger btn-block w-50 mx-auto" type="button"
+                  id="add_comment_btn">Add Comment</button></center>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block custom_javascript %}
+
+<script>
+  $('#like_btn').click(function () {
+    $.ajax({
+      type: "POST",
+      url: "{% url 'addlike' %}",
+      data: { "blog_id": "{{blog.id}}" },
+      cache: false,
+      success: function (res) {
+        console.log(res)
+        if (res.success && res.message === "Added") {
+          $('#like_btn').removeClass('btn-outline-primary')
+          $('#like_btn').addClass('btn-primary')
+          $('#like_btn').text(`${res.total_like} Like`)
+          $('#dislike_btn').removeClass('btn-primary')
+          $('#dislike_btn').addClass('btn-outline-primary')
+          $('#dislike_btn').text(`${res.total_dislike} Dislike`)
+        }
+        if (res.success && res.message === "Removed") {
+          $('#like_btn').removeClass('btn-primary')
+          $('#like_btn').addClass('btn-outline-primary')
+          $('#like_btn').text(`${res.total_like} Like`)
+          $('#dislike_btn').removeClass('btn-primary')
+          $('#dislike_btn').addClass('btn-outline-primary')
+          $('#dislike_btn').text(`${res.total_dislike} Dislike`)
+        }
+      },
+      error: function (error) {
+        console.error(error)
+      }
+    })
+  })
+
+  $('#dislike_btn').click(function () {
+    $.ajax({
+      type: "POST",
+      url: "{% url 'adddislike' %}",
+      data: { "blog_id": "{{blog.id}}" },
+      cache: false,
+      success: function (res) {
+        console.log(res)
+        if (res.success && res.message === "Added") {
+          $('#dislike_btn').removeClass('btn-outline-primary')
+          $('#dislike_btn').addClass('btn-primary')
+          $('#dislike_btn').text(`${res.total_dislike} Dislike`)
+          $('#like_btn').removeClass('btn-primary')
+          $('#like_btn').addClass('btn-outline-primary')
+          $('#like_btn').text(`${res.total_like} Like`)
+        }
+        if (res.success && res.message === "Removed") {
+          $('#dislike_btn').removeClass('btn-primary')
+          $('#dislike_btn').addClass('btn-outline-primary')
+          $('#dislike_btn').text(`${res.total_dislike} Dislike`)
+          $('#like_btn').removeClass('btn-primary')
+          $('#like_btn').addClass('btn-outline-primary')
+          $('#like_btn').text(`${res.total_like} Like`)
+        }
+      },
+      error: function (error) {
+        console.error(error)
+      }
+    })
+  });
+
+
+  $('#add_comment_btn').click(function () {
+    var text = $('#comment_text').val()
+    console.log(text)
+    if (text === "") {
+      alert("fill comment")
+      return null
+    }
+    var user_name= "{{request.user.username}}"
+    var user_name_first = "{{request.user.username|first}}"
+    $.ajax({
+      type: "POST",
+      url: "{% url 'addcomment' %}",
+      data: { "blog_id": "{{blog.id}}", "text": text },
+      cache: false,
+      success: function (res) {
+        console.log(res)
+        if (res.success && res.message === "Added") {
+          var html = "";
+          html += '<div id="user_single_comment" class="mt-1 p-1">'
+          html += '<div style="display: flex; justify-content: space-between;">'
+          html += '<div>'
+          html += '<span class="comment_profile" style="text-transform: uppercase; padding:.3rem .5rem;background-color: rgb(233, 10, 10); color:#ffffff; border-radius: 50%; border:.20rem solid rgb(54, 12, 86)">'+ user_name_first+'</span>  <span class="text-priamry" style="font-size:1.25rem; font-weight: 800;" >' + user_name + '</span>'
+          html += '</div>'
+          html += '<div>'
+          html += '<span class="text-danger"><strong>Publish:<strong> '+ res.publish +'</span></br>'
+          html += '<div class="btn-group mt-1">'
+          html += '<button type="button" class="btn btn-outline-primary ml-2 btn-sm" id="" data-toggle="modal" data-target="#CommentModal" data-backdrop="static" data-keyboard="false" >Edit</button>'
+          html += '<button type="button" class="btn btn-outline-danger ml-2 btn-sm" id="" data-toggle="modal" data-target="#CommentModal" data-backdrop="static" data-keyboard="false" >Delete</button>'
+          html += '</div>'
+
+          html += '</div>'
+          html += '</div>'
+          html += '<p class=" p-4">' + text + '</p>'
+          html += '</div>'
+
+          $('#CommentModal').modal('toggle');
+          $('#comment_text').val("")
+          $('#comment_btn').text(`${res.total_comments} Comments`)
+          $('#user_comment').prepend(html)
+
+          $('html, body').animate({
+            'scrollTop': $("#user_comment").position().top
+          });
+
+        }
+        else {
+          alert("error", res.message)
+        }
+      },
+      error: function (error) {
+        console.error(error)
+      }
+    })
+  });
+
+</script>
+
+{% endblock custom_javascript %}

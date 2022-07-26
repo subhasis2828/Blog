@@ -1,9 +1,14 @@
 from datetime import datetime
+from email.mime import application
+from multiprocessing import context
+from xml.etree.ElementTree import Comment
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,JsonResponse
 from django.shortcuts import redirect,render
-from myblog.models import Blogs
+from itsdangerous import json
+from myblog.models import Blogs,Comments
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth import authenticate,logout
 from django.contrib.auth import login as UserLogin
@@ -74,7 +79,14 @@ def Allblog(request):
 def Blog(request,id):
     blog = Blogs.objects.get(id = id)
     blogs = Blogs.objects.all().exclude(id=id).order_by("?")[:5]
-    return render(request,'blog.html',{"blogs":blogs,"blog":blog})
+    is_like =  request.user in blog.like.all()
+    is_dislike = request.user in blog.dislike.all()
+    comments = Comments.objects.filter(blog=id).exclude(user=request.user.id).select_related('user','blog').order_by('-created_at')
+    user_comments = Comments.objects.filter(blog=id,user=request.user.id).select_related('user','blog').order_by('-created_at')
+    context={"blogs":blogs,"blog":blog,"is_like":is_like,"is_dislike":is_dislike,
+    "total_comments":Comments.objects.filter(blog = blog.id).count(),"user_comments":user_comments,"comments":comments}
+    print(context)
+    return render(request,'blog.html',context)
 
 @login_required
 def AddBlog(request):
@@ -128,3 +140,90 @@ def DeleteBlog(request,id):
     else:
         messages.error(request, 'Can not find any blog')
         return HttpResponseRedirect(reverse('yourblog'))
+
+
+@login_required
+@csrf_exempt
+def AddLike(request):
+    try:
+        if not request.method == "POST":
+            data={"success":False,"message":"Method must be Post"}
+            return JsonResponse(data,safe=False)
+        blog_id =  request.POST.get('blog_id')
+        blog = Blogs.objects.filter(id = blog_id)
+        if blog.exists():
+            if not blog.filter(like =  request.user.id).exists():
+                blog = blog.first()
+                blog.dislike.remove(request.user)
+                blog.like.add(request.user)
+                data={"success":True,"message":"Added","total_like":blog.total_like(),"total_dislike":blog.total_dislike()}
+                return JsonResponse(data,safe=False)
+            else:
+                blog = blog.first()
+                blog.dislike.remove(request.user)
+                blog.like.remove(request.user)
+                data={"success":True,"message":"Removed","total_like":blog.total_like(),"total_dislike":blog.total_dislike()}
+                return JsonResponse(data,safe=False)
+        else:
+            data={"success":False,"message":"Blog not Exist"}
+            return JsonResponse(data,safe=False)
+    except Exception as e:
+        print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
+        data={"success":False,"message":str(e)}
+        return JsonResponse(data,safe=False)
+
+
+@login_required
+@csrf_exempt
+def AddDisLike(request):
+    try:
+        if not request.method == "POST":
+            data={"success":False,"message":"Method must be Post"}
+            return JsonResponse(data,safe=False)
+        blog_id =  request.POST.get('blog_id')
+        blog = Blogs.objects.filter(id = blog_id)
+        if blog.exists():
+            if not blog.filter(dislike = request.user.id).exists():
+                blog = blog.first()
+                blog.like.remove(request.user)
+                blog.dislike.add(request.user)
+                data={"success":True,"message":"Added","total_like":blog.total_like(),"total_dislike":blog.total_dislike()}
+                return JsonResponse(data,safe=False)
+            else:
+                blog = blog.first()
+                blog.like.remove(request.user)
+                blog.dislike.remove(request.user)
+                data={"success":True,"message":"Removed","total_like":blog.total_like(),"total_dislike":blog.total_dislike()}
+                return JsonResponse(data,safe=False)
+        else:
+            data={"success":False,"message":"Blog not Exist"}
+            return JsonResponse(data,safe=False)
+    except Exception as e:
+        print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
+        data={"success":False,"message":str(e)}
+        return JsonResponse(data,safe=False)
+
+
+@login_required
+@csrf_exempt
+def AddComment(request):
+    try:
+        if not request.method == "POST":
+            data={"success":False,"message":"Method must be Post"}
+            return JsonResponse(data,safe=False)
+        blog_id =  request.POST.get('blog_id')
+        text =  request.POST.get('text')
+        blog = Blogs.objects.filter(id = blog_id)
+        if blog.exists():
+            blog = blog.first()
+            comment = Comments(text=text,blog=blog,user=request.user)
+            comment.save()
+            data={"success":True,"message":"Added","total_comments":Comments.objects.filter(blog = blog.id).count(),"publish":comment.created_at.strftime('%b %d, %Y, %I:%M %p')}
+            return JsonResponse(data,safe=False)
+        else:
+            data={"success":False,"message":"Blog not Exist"}
+            return JsonResponse(data,safe=False)
+    except Exception as e:
+        print(f"{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}")
+        data={"success":False,"message":str(e)}
+        return JsonResponse(data,safe=False)
